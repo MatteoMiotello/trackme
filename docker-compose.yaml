@@ -1,0 +1,49 @@
+services:
+  backend:
+    container_name: tme-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3100:3100
+    expose:
+      - 3100
+    volumes:
+      - /app/node_modules
+      - ./.env:/app/.env
+      - ./:/app
+    depends_on:
+      tme-postgres:
+        condition: service_started
+      tme-mongodb:
+        condition: service_started
+    restart: always
+
+  tme-postgres:
+    container_name: tme-postgres
+    image: postgres:14.1-alpine
+    ports:
+      - 5432:5432
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DATABASE}
+    volumes:
+      - ./postgresql/var/lib/postgresql/data:/var/lib/postgresql/data
+    restart: always
+
+  tme-mongodb:
+    container_name: tme-mongodb
+    image: mongo:4.4.10-focal
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+    ports:
+      - 27017:27017
+    expose:
+      - 27017
+    volumes:
+      - ~/apps/mongo:/data/db
+    restart: always

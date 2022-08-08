@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import { User } from "../models/User";
 
 const postgresConfig = (): TypeOrmModuleOptions => ({
     type: 'postgres',
@@ -7,7 +8,9 @@ const postgresConfig = (): TypeOrmModuleOptions => ({
     database: process.env.POSTGRES_DATABASE || 'postgres',
     username: process.env.POSTGRES_USERNAME || 'postgres',
     password: process.env.POSTGRES_PASSWORD || 'postgres',
-    entities: [],
+    entities: [
+        User
+    ],
     synchronize: false,
     migrations: ["dist/migrations/*{.ts,.js}"],
     migrationsTableName: "migrations_typeorm",
