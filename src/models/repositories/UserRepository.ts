@@ -1,6 +1,7 @@
 import { DataSource, FindOneOptions, Repository } from "typeorm";
 import { User } from "../User";
 import { Injectable } from "@nestjs/common";
+import { SignupDto } from "../../features/login/Domain/SignupDto";
 
 @Injectable()
 export class UserRepository {
@@ -10,9 +11,10 @@ export class UserRepository {
         this.repo = this.dataSource.getRepository<User>(User);
     }
 
-    findOneByEmail(email: string): Promise<User | null> {
+    findOneByEmail(email: string, options: object | null = null): Promise<User | null> {
         return this.findOne({
                 where: {
+                    ...options,
                     email: email
                 }
             }
@@ -21,5 +23,9 @@ export class UserRepository {
 
     findOne(options: FindOneOptions): Promise<User | null> {
         return this.repo.findOne(options);
+    }
+
+    create( user: Partial<User> ) {
+        return this.repo.insert( user );
     }
 }
