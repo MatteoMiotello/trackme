@@ -1,8 +1,10 @@
 import postgresConfig from "./postgres";
+import jwtConfiguration from "./jwt";
 
 const getConfiguration = ()  => {
      return {
-         postgres: postgresConfig()
+         postgres: postgresConfig(),
+         jwt: jwtConfiguration()
      }
 }
 

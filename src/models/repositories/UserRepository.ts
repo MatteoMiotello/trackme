@@ -1,17 +1,17 @@
 import { DataSource, FindOneOptions, Repository } from "typeorm";
-import { User } from "../User";
+import { UserEntity } from "../user.entity";
 import { Injectable } from "@nestjs/common";
-import { SignupDto } from "../../features/login/Domain/SignupDto";
+import { SignupDto } from "../../features/login/domain/signup.dto";
 
 @Injectable()
 export class UserRepository {
-    private repo: Repository<User>;
+    private repo: Repository<UserEntity>;
 
     constructor(private dataSource: DataSource) {
-        this.repo = this.dataSource.getRepository<User>(User);
+        this.repo = this.dataSource.getRepository<UserEntity>(UserEntity);
     }
 
-    findOneByEmail(email: string, options: object | null = null): Promise<User | null> {
+    findOneByEmail(email: string, options: object | null = null): Promise<UserEntity | null> {
         return this.findOne({
                 where: {
                     ...options,
@@ -21,11 +21,11 @@ export class UserRepository {
         );
     }
 
-    findOne(options: FindOneOptions): Promise<User | null> {
+    findOne(options: FindOneOptions): Promise<UserEntity | null> {
         return this.repo.findOne(options);
     }
 
-    create( user: Partial<User> ) {
+    create( user: Partial<UserEntity> ) {
         return this.repo.insert( user );
     }
 }
