@@ -1,4 +1,5 @@
 import {
+    BeforeInsert,
     Column,
     CreateDateColumn,
     Entity,
@@ -8,9 +9,11 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import { UserEntity } from "./user.entity";
+import {v4 as uuidv4} from 'uuid';
+import { TokenizeEntity } from "../Interfaces/TokenizeEntity";
 
 @Entity('resource')
-export class ResourceEntity {
+export class ResourceEntity implements TokenizeEntity{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -20,8 +23,13 @@ export class ResourceEntity {
     userId: number;
 
     @ManyToOne(type => UserEntity, user => user.resources, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'occupancyId', referencedColumnName: 'id' })
+    @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
     user: UserEntity;
+
+    @Column({
+        nullable: false
+    })
+    token: string;
 
     @Column({
         nullable: false
@@ -39,4 +47,9 @@ export class ResourceEntity {
 
     @CreateDateColumn()
     createdDate: Date;
+
+    @BeforeInsert()
+    beforeInsert() {
+        this.token = uuidv4();
+    }
 }

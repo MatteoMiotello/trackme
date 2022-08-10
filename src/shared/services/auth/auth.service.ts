@@ -1,11 +1,11 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { UserRepository } from "../../../models/repositories/UserRepository";
+import { UserRepository } from "../../../models/repositories/user.repository";
 import { LoginDto } from "../../../features/login/domain/login.dto";
 import { SignupDto } from "../../../features/login/domain/signup.dto";
 import { createHash } from "crypto";
 import { BadParamException } from "../../Exceptions/BadParamException";
 import { JwtService } from "@nestjs/jwt";
-import { UserEntity } from "../../../models/user.entity";
+import { UserEntity } from "../../../models/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -21,7 +21,7 @@ export class AuthService {
             throw new UnauthorizedException();
         }
 
-        if (user.password != this.hash(loginDto.password)) {
+        if (user.password !== this.hash(loginDto.password)) {
             throw new BadParamException("password", "wrong password");
         }
 

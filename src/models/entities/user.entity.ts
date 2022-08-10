@@ -3,7 +3,7 @@ import { type } from "os";
 import { ResourceEntity } from "./resource.entity";
 
 @Entity('user')
-export class UserEntity {
+export class UserEntity implements EntityInterface{
     @PrimaryGeneratedColumn()
     id: number;
 

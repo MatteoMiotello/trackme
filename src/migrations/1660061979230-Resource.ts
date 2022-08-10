@@ -9,6 +9,7 @@ export class Resource1660061979230 implements MigrationInterface {
             name: 'resource',
             columns: [
                 TableColumnFactory.generatePkColumn( 'resource' ),
+                TableColumnFactory.generateColumn('token', PostgresDataType.string),
                 TableColumnFactory.generateFkColumn( 'user' ),
                 TableColumnFactory.generateColumn( 'content', PostgresDataType.text, {
                     isNullable: false
