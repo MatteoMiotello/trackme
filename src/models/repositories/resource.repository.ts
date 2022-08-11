@@ -1,19 +1,19 @@
 import { GenericSqlRepository } from "./generic-sql.repository";
-import { ResourceEntity } from "../entities/resource.entity";
+import { Resource } from "../entities/resource.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserEntity } from "../entities/user.entity";
+import { User } from "../entities/user.entity";
 import { Repository } from "typeorm";
 
-export class ResourceRepository extends GenericSqlRepository<ResourceEntity> {
-    public constructor(@InjectRepository( ResourceEntity, 'postgres' ) private repo: Repository<ResourceEntity>) {
+export class ResourceRepository extends GenericSqlRepository<Resource> {
+    public constructor(@InjectRepository( Resource, 'postgres' ) private repo: Repository<Resource>) {
         super();
     }
 
     getEntity() {
-        return ResourceEntity;
+        return Resource;
     }
 
-    protected getRepo(): Repository<ResourceEntity> {
+    protected getRepo(): Repository<Resource> {
         return this.repo;
     }
 }

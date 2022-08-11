@@ -1,9 +1,9 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { type } from "os";
-import { ResourceEntity } from "./resource.entity";
+import { Resource } from "./resource.entity";
 
 @Entity('user')
-export class UserEntity implements EntityInterface{
+export class User implements EntityInterface{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -35,6 +35,6 @@ export class UserEntity implements EntityInterface{
     @CreateDateColumn()
     createdDate: Date;
 
-    @OneToMany(type => ResourceEntity, resource => resource.user, {onDelete: 'CASCADE'})
-    resources: ResourceEntity[];
+    @OneToMany(type => Resource, resource => resource.user, {onDelete: 'CASCADE'})
+    resources: Resource[];
 }

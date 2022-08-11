@@ -1,5 +1,5 @@
 import { DataSourceOptions } from "typeorm";
-import { ResourceLogEntity } from "../models/schemas/resource-log.entity";
+import { ResourceLog } from "../models/schemas/resource-log.schema";
 
 const mongoConfig = (): DataSourceOptions => ({
     type: "mongodb",
@@ -10,7 +10,7 @@ const mongoConfig = (): DataSourceOptions => ({
     database: process.env.MONGO_DB,
     authSource: 'admin',
     entities: [
-        ResourceLogEntity
+        ResourceLog
     ]
 });
 

@@ -1,18 +1,18 @@
 import { Repository } from "typeorm";
-import { UserEntity } from "../entities/user.entity";
+import { User } from "../entities/user.entity";
 import { GenericSqlRepository } from "./generic-sql.repository";
 import { InjectRepository } from "@nestjs/typeorm";
 
-export class UserRepository extends GenericSqlRepository<UserEntity> {
-    public constructor(@InjectRepository(UserEntity, "postgres") private repo: Repository<UserEntity>) {
+export class UserRepository extends GenericSqlRepository<User> {
+    public constructor(@InjectRepository(User, "postgres") private repo: Repository<User>) {
         super();
     }
 
     getEntity() {
-        return UserEntity;
+        return User;
     }
 
-    findOneByEmail(email: string, options: object | null = null): Promise<UserEntity | null> {
+    findOneByEmail(email: string, options: object | null = null): Promise<User | null> {
         return this.findOne({
                 where: {
                     ...options,
@@ -22,7 +22,7 @@ export class UserRepository extends GenericSqlRepository<UserEntity> {
         );
     }
 
-    protected getRepo(): Repository<UserEntity> {
+    protected getRepo(): Repository<User> {
         return this.repo;
     }
 }

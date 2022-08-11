@@ -15,10 +15,10 @@ import { CreateDto } from "../Domain/create.dto";
 import { ResourceService } from "../services/resource/resource.service";
 import { Request, Response } from "express";
 import { JwtAuthGuard } from "../../../shared/guards/jwt-auth-guard.service";
-import { LoggedUser } from "../../../shared/Decorators/LoggedUser";
-import { UserEntity } from "../../../models/entities/user.entity";
-import { Aggregation } from "../../../models/Utils/ResourceLogAggregationOptions";
-import { ParseJsonPipe } from "../../../shared/Pipes/ParseJsonPipe";
+import { LoggedUser } from "../../../shared/decorators/logged-user.decorator";
+import { User } from "../../../models/entities/user.entity";
+import { Aggregation } from "../../../models/Utils/resource-logs-aggregations.options";
+import { ParseJsonPipe } from "../../../shared/Pipes/parse-json.pipe";
 
 @Controller("resource")
 export class ResourceController {
@@ -48,19 +48,19 @@ export class ResourceController {
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async getAll( @LoggedUser() user: UserEntity ) {
+    async getAll( @LoggedUser() user: User ) {
         return this.resourceService.getAllResources(user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Post("create")
-    async createAction(@Req() req: Request, @Body() createResourceDto: CreateDto, @LoggedUser() user: UserEntity) {
+    async createAction(@Req() req: Request, @Body() createResourceDto: CreateDto, @LoggedUser() user: User) {
         return await this.resourceService.createResource(createResourceDto, user);
     }
 
     @UseGuards(JwtAuthGuard)
     @Delete("delete/:id")
-    async deleteAction(@Param() params, @LoggedUser() user: UserEntity) {
+    async deleteAction(@Param() params, @LoggedUser() user: User) {
         return this.resourceService.deleteResource(params.id, user);
     }
 
@@ -68,7 +68,7 @@ export class ResourceController {
     @Get( 'logsCount/:id' )
     async logsCount(
         @Param() params,
-        @LoggedUser() user: UserEntity,
+        @LoggedUser() user: User,
         @Query( 'aggregatePeriod' ) aggregatePeriod: 'day' | 'month' | 'year' | null,
         @Query( 'paramAggregations', ParseJsonPipe ) paramAggregations: Aggregation[] | null
     ) {

@@ -6,9 +6,9 @@ import getConfiguration from "../config";
 import { UserRepository } from "./repositories/user.repository";
 import { ResourceLogRepository } from "./repositories/resource-log.repository";
 import { MongooseModule } from "@nestjs/mongoose";
-import { UserEntity } from "./entities/user.entity";
-import { ResourceEntity } from "./entities/resource.entity";
-import { ResourceLogEntity } from "./schemas/resource-log.entity";
+import { User } from "./entities/user.entity";
+import { Resource } from "./entities/resource.entity";
+import { ResourceLog } from "./schemas/resource-log.schema";
 
 @Module({
     imports: [
@@ -32,8 +32,8 @@ import { ResourceLogEntity } from "./schemas/resource-log.entity";
             },
             inject: [ConfigService]
         }),
-        TypeOrmModule.forFeature( [UserEntity, ResourceEntity], 'postgres' ),
-        TypeOrmModule.forFeature( [ResourceLogEntity], 'mongo' )
+        TypeOrmModule.forFeature( [User, Resource], 'postgres' ),
+        TypeOrmModule.forFeature( [ResourceLog], 'mongo' )
     ],
     providers: [
         UserRepository,

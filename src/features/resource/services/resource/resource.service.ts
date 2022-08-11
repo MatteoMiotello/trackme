@@ -1,18 +1,18 @@
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { CreateDto } from "../../Domain/create.dto";
 import { ResourceRepository } from "../../../../models/repositories/resource.repository";
-import { UserEntity } from "../../../../models/entities/user.entity";
+import { User } from "../../../../models/entities/user.entity";
 import { DeleteDto } from "../../Domain/delete.dto";
-import { ResourceEntity } from "../../../../models/entities/resource.entity";
+import { Resource } from "../../../../models/entities/resource.entity";
 import { ResourceLogRepository } from "../../../../models/repositories/resource-log.repository";
 import { Request } from "express";
 import * as geoip from "geoip-lite";
 import { AggregationCursor } from "typeorm";
-import { ResourceLogEntity } from "../../../../models/schemas/resource-log.entity";
+import { ResourceLog } from "../../../../models/schemas/resource-log.schema";
 import {
     AggregationOptions,
     ResourceLogAggregationOptions
-} from "../../../../models/Utils/ResourceLogAggregationOptions";
+} from "../../../../models/Utils/resource-logs-aggregations.options";
 
 @Injectable()
 export class ResourceService {
@@ -22,7 +22,7 @@ export class ResourceService {
     ) {
     }
 
-    getAllResources( user: UserEntity ): Promise<ResourceEntity[]> {
+    getAllResources( user: User ): Promise<Resource[]> {
         return this.resourceRepository.find({
             where:{
                 userId: user.id,
@@ -31,11 +31,11 @@ export class ResourceService {
         })
     }
 
-    createResource(createDto: CreateDto, user: UserEntity) {
+    createResource(createDto: CreateDto, user: User) {
         return this.resourceRepository.create({ content: createDto.destination, userId: user.id });
     }
 
-    async deleteResource(id: number, user: UserEntity) {
+    async deleteResource(id: number, user: User) {
         const resource = await this.resourceRepository.findOneById(id);
 
         if (!resource) {
@@ -51,7 +51,7 @@ export class ResourceService {
         return this.resourceRepository.update(resource.id, resource);
     }
 
-    public getResourceByToken( token: string ): Promise<ResourceEntity | null> {
+    public getResourceByToken( token: string ): Promise<Resource | null> {
         return this.resourceRepository.findOne( {
             where: {
                 token: token,
@@ -60,11 +60,11 @@ export class ResourceService {
         } );
     }
 
-    public getResourceById( id: number ): Promise<ResourceEntity | null> {
+    public getResourceById( id: number ): Promise<Resource | null> {
         return this.resourceRepository.findOneById( id );
     }
 
-    public registerLog(resource: ResourceEntity, request: Request){
+    public registerLog(resource: Resource, request: Request){
         const ip = request.ip;
 
         const location = geoip.lookup( ip );
@@ -78,11 +78,11 @@ export class ResourceService {
         } )
     }
 
-    public getLogsCount(resource: ResourceEntity, options: AggregationOptions ){
+    public getLogsCount(resource: Resource, options: AggregationOptions ){
         return this.resourceLogRepository.getCount( resource, options ).toArray();
     }
 
-    public getAllLogs( resource: ResourceEntity ){
+    public getAllLogs( resource: Resource ){
         return this.resourceLogRepository.findByResource( resource );
     }
 }

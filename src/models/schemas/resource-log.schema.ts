@@ -28,7 +28,7 @@ export class IpLocation {
 }
 
 @Entity( 'resource_log' )
-export class ResourceLogEntity {
+export class ResourceLog {
     @ObjectIdColumn()
     id: ObjectID;
 

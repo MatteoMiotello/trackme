@@ -4,12 +4,12 @@ import { AuthService } from "../../shared/services/auth/auth.service";
 import { UserRepository } from "../../models/repositories/user.repository";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { UserEntity } from "../../models/entities/user.entity";
+import { User } from "../../models/entities/user.entity";
 import { SharedModule } from "../../shared/shared.module";
 import { ModelsModule } from "../../models/models.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { ResourceEntity } from "../../models/entities/resource.entity";
-import { ResourceLogEntity } from "../../models/schemas/resource-log.entity";
+import { Resource } from "../../models/entities/resource.entity";
+import { ResourceLog } from "../../models/schemas/resource-log.schema";
 
 @Module({
     imports: [
@@ -20,7 +20,7 @@ import { ResourceLogEntity } from "../../models/schemas/resource-log.entity";
             },
             inject: [ConfigService]
         }),
-        TypeOrmModule.forFeature( [UserEntity], 'postgres' ),
+        TypeOrmModule.forFeature( [User], 'postgres' ),
         SharedModule,
         ModelsModule
     ],

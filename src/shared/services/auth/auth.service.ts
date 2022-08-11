@@ -3,9 +3,9 @@ import { UserRepository } from "../../../models/repositories/user.repository";
 import { LoginDto } from "../../../features/login/domain/login.dto";
 import { SignupDto } from "../../../features/login/domain/signup.dto";
 import { createHash } from "crypto";
-import { BadParamException } from "../../Exceptions/BadParamException";
+import { BadParamException } from "../../exceptions/bad-param.exception";
 import { JwtService } from "@nestjs/jwt";
-import { UserEntity } from "../../../models/entities/user.entity";
+import { User } from "../../../models/entities/user.entity";
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
         private readonly jwtService: JwtService) {
     }
 
-    public async validateLogin(loginDto: LoginDto): Promise<{user: UserEntity, token: string}> {
+    public async validateLogin(loginDto: LoginDto): Promise<{user: User, token: string}> {
         const user = await this.userRepository.findOneByEmail(loginDto.username, { isActive: true });
 
         if (!user) {

@@ -5,7 +5,7 @@ import { MongoFindOneOptions } from "typeorm/find-options/mongodb/MongoFindOneOp
 import { MongoFindManyOptions } from "typeorm/find-options/mongodb/MongoFindManyOptions";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { ResourceLogEntity } from "../schemas/resource-log.entity";
+import { ResourceLog } from "../schemas/resource-log.schema";
 
 @Injectable()
 export abstract class GenericMongoRepository<T> {

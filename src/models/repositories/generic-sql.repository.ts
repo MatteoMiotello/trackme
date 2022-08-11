@@ -8,7 +8,7 @@ import {
     UpdateResult
 } from "typeorm";
 import { Injectable } from "@nestjs/common";
-import { UserEntity } from "../entities/user.entity";
+import { User } from "../entities/user.entity";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
 import { InjectRepository } from "@nestjs/typeorm";
 

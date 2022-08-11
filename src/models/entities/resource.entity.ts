@@ -8,12 +8,12 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
-import { UserEntity } from "./user.entity";
+import { User } from "./user.entity";
 import {v4 as uuidv4} from 'uuid';
-import { TokenizeEntity } from "../Interfaces/TokenizeEntity";
+import { TokenizeInterface } from "../Interfaces/tokenize.interface";
 
 @Entity('resource')
-export class ResourceEntity implements TokenizeEntity{
+export class Resource implements TokenizeInterface{
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -22,9 +22,9 @@ export class ResourceEntity implements TokenizeEntity{
     })
     userId: number;
 
-    @ManyToOne(type => UserEntity, user => user.resources, { onDelete: 'CASCADE' })
+    @ManyToOne(type => User, user => user.resources, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userId', referencedColumnName: 'id' })
-    user: UserEntity;
+    user: User;
 
     @Column({
         nullable: false
