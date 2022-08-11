@@ -1,10 +1,24 @@
-import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Req, Res, UseGuards } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    NotFoundException,
+    Param,
+    Post, Query,
+    Req,
+    Res,
+    UnauthorizedException,
+    UseGuards
+} from "@nestjs/common";
 import { CreateDto } from "../Domain/create.dto";
 import { ResourceService } from "../services/resource/resource.service";
 import { Request, Response } from "express";
 import { JwtAuthGuard } from "../../../shared/guards/jwt-auth-guard.service";
 import { LoggedUser } from "../../../shared/Decorators/LoggedUser";
 import { UserEntity } from "../../../models/entities/user.entity";
+import { Aggregation } from "../../../models/Utils/ResourceLogAggregationOptions";
+import { ParseJsonPipe } from "../../../shared/Pipes/ParseJsonPipe";
 
 @Controller("resource")
 export class ResourceController {
@@ -48,5 +62,26 @@ export class ResourceController {
     @Delete("delete/:id")
     async deleteAction(@Param() params, @LoggedUser() user: UserEntity) {
         return this.resourceService.deleteResource(params.id, user);
+    }
+
+    @UseGuards( JwtAuthGuard )
+    @Get( 'logsCount/:id' )
+    async logsCount(
+        @Param() params,
+        @LoggedUser() user: UserEntity,
+        @Query( 'aggregatePeriod' ) aggregatePeriod: 'day' | 'month' | 'year' | null,
+        @Query( 'paramAggregations', ParseJsonPipe ) paramAggregations: Aggregation[] | null
+    ) {
+        const resource = await this.resourceService.getResourceById( params.id );
+
+        if ( !resource ) {
+            throw new NotFoundException();
+        }
+
+        if ( resource.userId != user.id ) {
+            throw new UnauthorizedException();
+        }
+
+        return await this.resourceService.getLogsCount( resource, { aggregatePeriod: aggregatePeriod, paramAggregations: paramAggregations } );
     }
 }

@@ -7,6 +7,12 @@ import { ResourceEntity } from "../../../../models/entities/resource.entity";
 import { ResourceLogRepository } from "../../../../models/repositories/resource-log.repository";
 import { Request } from "express";
 import * as geoip from "geoip-lite";
+import { AggregationCursor } from "typeorm";
+import { ResourceLogEntity } from "../../../../models/schemas/resource-log.entity";
+import {
+    AggregationOptions,
+    ResourceLogAggregationOptions
+} from "../../../../models/Utils/ResourceLogAggregationOptions";
 
 @Injectable()
 export class ResourceService {
@@ -54,6 +60,10 @@ export class ResourceService {
         } );
     }
 
+    public getResourceById( id: number ): Promise<ResourceEntity | null> {
+        return this.resourceRepository.findOneById( id );
+    }
+
     public registerLog(resource: ResourceEntity, request: Request){
         const ip = request.ip;
 
@@ -66,5 +76,13 @@ export class ResourceService {
             location: location,
             request: null,
         } )
+    }
+
+    public getLogsCount(resource: ResourceEntity, options: AggregationOptions ){
+        return this.resourceLogRepository.getCount( resource, options ).toArray();
+    }
+
+    public getAllLogs( resource: ResourceEntity ){
+        return this.resourceLogRepository.findByResource( resource );
     }
 }
