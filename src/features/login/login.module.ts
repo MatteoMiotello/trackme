@@ -7,6 +7,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { UserEntity } from "../../models/entities/user.entity";
 import { SharedModule } from "../../shared/shared.module";
 import { ModelsModule } from "../../models/models.module";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ResourceEntity } from "../../models/entities/resource.entity";
+import { ResourceLogEntity } from "../../models/schemas/resource-log.entity";
 
 @Module({
     imports: [
@@ -17,6 +20,7 @@ import { ModelsModule } from "../../models/models.module";
             },
             inject: [ConfigService]
         }),
+        TypeOrmModule.forFeature( [UserEntity], 'postgres' ),
         SharedModule,
         ModelsModule
     ],

@@ -1,8 +1,13 @@
-import { DataSource, FindOneOptions, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { UserEntity } from "../entities/user.entity";
-import { GenericRepository } from "./generic.repository";
+import { GenericSqlRepository } from "./generic-sql.repository";
+import { InjectRepository } from "@nestjs/typeorm";
 
-export class UserRepository extends GenericRepository<UserEntity>{
+export class UserRepository extends GenericSqlRepository<UserEntity> {
+    public constructor(@InjectRepository(UserEntity, "postgres") private repo: Repository<UserEntity>) {
+        super();
+    }
+
     getEntity() {
         return UserEntity;
     }
@@ -15,5 +20,9 @@ export class UserRepository extends GenericRepository<UserEntity>{
                 }
             }
         );
+    }
+
+    protected getRepo(): Repository<UserEntity> {
+        return this.repo;
     }
 }

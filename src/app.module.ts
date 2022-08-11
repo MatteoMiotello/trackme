@@ -10,7 +10,7 @@ import { ModelsModule } from "./models/models.module";
         LoginModule,
         ResourceModule,
         SharedModule,
-        ModelsModule
+        ModelsModule,
     ],
     controllers: [
         AppController

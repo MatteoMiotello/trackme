@@ -1,6 +1,7 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { UserEntity } from "../models/entities/user.entity";
 import { ResourceEntity } from "../models/entities/resource.entity";
+import { ResourceLogEntity } from "../models/schemas/resource-log.entity";
 
 const postgresConfig = (): TypeOrmModuleOptions => ({
     type: 'postgres',
@@ -11,8 +12,9 @@ const postgresConfig = (): TypeOrmModuleOptions => ({
     password: process.env.POSTGRES_PASSWORD || 'postgres',
     entities: [
         UserEntity,
-        ResourceEntity
+        ResourceEntity,
     ],
+    autoLoadEntities: true,
     synchronize: false,
     migrations: ["dist/migrations/*{.ts,.js}"],
     migrationsTableName: "migrations_typeorm",

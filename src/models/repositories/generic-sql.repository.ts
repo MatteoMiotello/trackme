@@ -10,16 +10,15 @@ import {
 import { Injectable } from "@nestjs/common";
 import { UserEntity } from "../entities/user.entity";
 import { QueryDeepPartialEntity } from "typeorm/query-builder/QueryPartialEntity";
+import { InjectRepository } from "@nestjs/typeorm";
+
 
 @Injectable()
-export abstract class GenericRepository<T extends EntityInterface> {
-    protected repo: Repository<T>;
-
-    public constructor(private dataSource: DataSource) {
-        this.repo = this.dataSource.getRepository<T>(this.getEntity());
-    }
-
+export abstract class GenericSqlRepository<T extends EntityInterface> {
     abstract getEntity();
+
+    protected abstract getRepo(): Repository<T>;
+
 
     findOneById(id: number): Promise<T | null> {
         return this.findOne({
@@ -28,15 +27,16 @@ export abstract class GenericRepository<T extends EntityInterface> {
     }
 
     findOne(options: FindOneOptions): Promise<T | null> {
-        return this.repo.findOne(options);
+        return this.getRepo().findOne(options);
     }
 
-    create( entity: DeepPartial<T> ) {
-        return this.repo.save( entity );
+    create( attributes: DeepPartial<T> ) {
+        const entity = Object.assign( new (this.getEntity())(), attributes );
+        return this.getRepo().save( entity );
     }
 
     update( id: number, entity: QueryDeepPartialEntity<T>): Promise<UpdateResult> {
-        return this.repo.update( id, entity );
+        return this.getRepo().update( id, entity );
     }
 
     async delete( entity: number | EntityInterface ) {
@@ -44,12 +44,12 @@ export abstract class GenericRepository<T extends EntityInterface> {
             entity = await this.findOneById(entity);
         }
 
-        return this.repo.delete( {
+        return this.getRepo().delete( {
             id: entity.id
         } );
     }
 
     find( options: FindManyOptions ): Promise<T[]> {
-        return this.repo.find(options);
+        return this.getRepo().find(options);
     }
 }
