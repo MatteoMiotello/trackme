@@ -22,7 +22,7 @@ export class UserRepository extends GenericSqlRepository<User> {
         );
     }
 
-    protected getRepo(): Repository<User> {
+    public getRepo(): Repository<User> {
         return this.repo;
     }
 }

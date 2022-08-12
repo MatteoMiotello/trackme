@@ -17,7 +17,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 export abstract class GenericSqlRepository<T extends EntityInterface> {
     abstract getEntity();
 
-    protected abstract getRepo(): Repository<T>;
+    public abstract getRepo(): Repository<T>;
 
 
     findOneById(id: number): Promise<T | null> {

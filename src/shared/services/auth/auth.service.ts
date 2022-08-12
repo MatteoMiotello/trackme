@@ -36,7 +36,7 @@ export class AuthService {
             });
 
         return {
-            user: user,
+            user: { ...user, password: null },
             token: token
         };
     }

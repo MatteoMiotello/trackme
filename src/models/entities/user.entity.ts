@@ -14,7 +14,6 @@ export class User implements EntityInterface{
 
     @Column({
         nullable: false,
-        select: false
     })
     password: string;
 

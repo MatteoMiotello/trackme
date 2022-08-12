@@ -13,7 +13,7 @@ export class ResourceRepository extends GenericSqlRepository<Resource> {
         return Resource;
     }
 
-    protected getRepo(): Repository<Resource> {
+    public getRepo(): Repository<Resource> {
         return this.repo;
     }
 }
