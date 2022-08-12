@@ -8,12 +8,20 @@ export interface AggregationOptions {
     aggregatePeriod: "month" | "day" | "year" | null;
 
     paramAggregations: Aggregation[] | null;
+
+    aggregateFrom: Date | null;
+
+    aggregateTo: Date | null;
 }
 
-export class ResourceLogAggregationOptions implements AggregationOptions {
+export class ResourceLogAggregationHelper implements AggregationOptions {
     aggregatePeriod: "month" | "day" | "year" | null;
 
     paramAggregations: Aggregation[] | null;
+
+    aggregateFrom: Date | null;
+
+    aggregateTo: Date | null;
 
     getDateAggregation() {
         switch (this.aggregatePeriod) {
@@ -49,7 +57,7 @@ export class ResourceLogAggregationOptions implements AggregationOptions {
 
     }
 
-    getAggregations() {
+    getGroupsBy() {
         let aggregations = {
             date: this.getDateAggregation()
         };
@@ -64,6 +72,26 @@ export class ResourceLogAggregationOptions implements AggregationOptions {
                     };
                 }, {})
             };
+        }
+
+        return aggregations;
+    }
+
+    getAggregateFromTo(){
+        let aggregations = [];
+
+        if (this.aggregateFrom) {
+            aggregations = [
+                ...aggregations,
+                { createdDate: { $gte: this.aggregateFrom } }
+            ];
+        }
+
+        if ( this.aggregateTo ) {
+            aggregations = [
+                ...aggregations,
+                { createdDate: { $lte: this.aggregateTo } }
+            ];
         }
 
         return aggregations;

@@ -11,7 +11,7 @@ import { AggregationCursor } from "typeorm";
 import { ResourceLog } from "../../../../models/schemas/resource-log.schema";
 import {
     AggregationOptions,
-    ResourceLogAggregationOptions
+    ResourceLogAggregationHelper
 } from "../../../../models/Utils/resource-logs-aggregations.options";
 
 @Injectable()

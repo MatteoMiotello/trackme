@@ -15,7 +15,9 @@ export class AuthService {
     }
 
     public async validateLogin(loginDto: LoginDto): Promise<{user: User, token: string}> {
-        const user = await this.userRepository.findOneByEmail(loginDto.username, { isActive: true });
+        const user = await this.userRepository.findOneByEmail(loginDto.username, {
+            isActive: true,
+        });
 
         if (!user) {
             throw new UnauthorizedException();

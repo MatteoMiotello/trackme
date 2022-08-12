@@ -3,7 +3,7 @@ import { ResourceLog } from "../schemas/resource-log.schema";
 import { Resource } from "../entities/resource.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { MongoRepository } from "typeorm";
-import { AggregationOptions, ResourceLogAggregationOptions } from "../Utils/resource-logs-aggregations.options";
+import { AggregationOptions, ResourceLogAggregationHelper } from "../Utils/resource-logs-aggregations.options";
 
 export class ResourceLogRepository extends GenericMongoRepository<ResourceLog> {
     constructor(@InjectRepository(ResourceLog, "mongo") private repo: MongoRepository<ResourceLog>) {
@@ -27,6 +27,28 @@ export class ResourceLogRepository extends GenericMongoRepository<ResourceLog> {
     }
 
     public getCount(resource: Resource, options: AggregationOptions | null) {
+        let aggregationHelper: ResourceLogAggregationHelper | null = null;
+        if (options) {
+            aggregationHelper = Object.assign(new ResourceLogAggregationHelper(), options);
+        }
+
+        let stage1 = {
+            $match: {
+                $and: []
+            }
+        };
+
+        stage1.$match.$and = [
+            { resourceToken: resource.token }
+        ];
+
+        if (aggregationHelper) {
+            stage1.$match.$and = [
+                ...stage1.$match.$and,
+                ...aggregationHelper.getAggregateFromTo()
+            ];
+        }
+
         let stage2 = {
             $group: {
                 _id: {},
@@ -36,17 +58,13 @@ export class ResourceLogRepository extends GenericMongoRepository<ResourceLog> {
             }
         };
 
-        if (options) {
-            const aggregationObject = Object.assign(new ResourceLogAggregationOptions(), options);
-            stage2.$group._id = aggregationObject.getAggregations();
+        if (aggregationHelper) {
+            stage2.$group._id = aggregationHelper.getGroupsBy();
         }
 
         return this.repo.aggregate([
-            {
-                $match: {
-                    resourceToken: resource.token
-                }
-            }, stage2
+            stage1,
+            stage2
         ]);
     }
 }
