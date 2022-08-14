@@ -1,5 +1,4 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { type } from "os";
 import { Resource } from "./resource.entity";
 
 @Entity('user')

@@ -56,7 +56,9 @@ export class AuthService {
 
         return this.userRepository.create({
             email: signupDto.email,
-            password: hashed
+            password: hashed,
+            firstName: signupDto.firstName,
+            lastName: signupDto.lastName
         });
     }
 

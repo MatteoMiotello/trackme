@@ -1,7 +1,14 @@
-export interface Aggregation {
-    name: string;
+import { ApiExtraModels, ApiParam, ApiProperty } from "@nestjs/swagger";
 
+export class Aggregation {
+    name: string;
     property: string;
+}
+
+export enum AggregatePeriod {
+    month = "month",
+    day = "day",
+    year = "year"
 }
 
 export interface AggregationOptions {
@@ -77,7 +84,7 @@ export class ResourceLogAggregationHelper implements AggregationOptions {
         return aggregations;
     }
 
-    getAggregateFromTo(){
+    getAggregateFromTo() {
         let aggregations = [];
 
         if (this.aggregateFrom) {
@@ -87,7 +94,7 @@ export class ResourceLogAggregationHelper implements AggregationOptions {
             ];
         }
 
-        if ( this.aggregateTo ) {
+        if (this.aggregateTo) {
             aggregations = [
                 ...aggregations,
                 { createdDate: { $lte: this.aggregateTo } }
