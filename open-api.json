@@ -1,0 +1,449 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "operationId": "LoginController_loginAction",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "400": {
+            "description": "If password is incorrect"
+          },
+          "401": {
+            "description": "If email is incorrect"
+          },
+          "default": {
+            "description": "Login success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login/signup": {
+      "post": {
+        "operationId": "LoginController_signUpAction",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "User created success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resource/{id}": {
+      "get": {
+        "operationId": "ResourceController_getResource",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resource": {
+      "get": {
+        "operationId": "ResourceController_getAll",
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResourceDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resource/create": {
+      "post": {
+        "operationId": "ResourceController_createAction",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resource/delete/{id}": {
+      "delete": {
+        "operationId": "ResourceController_deleteAction",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Id of resource to delete",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/resource/logsCount/{id}": {
+      "get": {
+        "operationId": "ResourceController_logsCount",
+        "parameters": [
+          {
+            "name": "aggregatePeriod",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "enum": [
+                "day",
+                "month",
+                "year"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "paramAggregations",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "{\"name\":string,\"property\":string}[]"
+            }
+          },
+          {
+            "name": "aggregateFrom",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "yYYY-mm-dd"
+            }
+          },
+          {
+            "name": "aggregateTo",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "yYYY-mm-dd"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Id of resource",
+            "schema": {}
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/resource/allLogs/{id}": {
+      "get": {
+        "operationId": "ResourceController_allLogs",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "Id of resource",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResourceLogDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "info": {
+    "title": "Track.me API",
+    "description": "The Track.me API description",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "track",
+      "description": ""
+    }
+  ],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "password",
+          "firstName",
+          "lastName",
+          "isActive"
+        ]
+      },
+      "LoginResponseDto": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserDto"
+          },
+          "token": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "user",
+          "token"
+        ]
+      },
+      "SignupDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "repeatPassword": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "repeatPassword",
+          "firstName",
+          "lastName"
+        ]
+      },
+      "ResourceDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "userId": {
+            "type": "number"
+          },
+          "token": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "updatedDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdDate": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "token",
+          "content",
+          "isActive",
+          "updatedDate",
+          "createdDate"
+        ]
+      },
+      "CreateDto": {
+        "type": "object",
+        "properties": {
+          "destination": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "destination"
+        ]
+      },
+      "ResourceLogDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "number"
+          },
+          "resourceToken": {
+            "type": "string"
+          },
+          "userAgent": {
+            "type": "string"
+          },
+          "remoteIp": {
+            "type": "string"
+          },
+          "request": {
+            "type": "object"
+          },
+          "updatedDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "createdDate": {
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "resourceToken",
+          "userAgent",
+          "remoteIp",
+          "request",
+          "updatedDate",
+          "createdDate"
+        ]
+      }
+    }
+  }
+}
