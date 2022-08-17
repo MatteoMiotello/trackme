@@ -49,6 +49,7 @@ export class LoginController {
         type: '{"paramName": "email", "description":"Email already present"}'
     })
     public async signUpAction(@Body() signupDto: SignupDto) {
+        console.log( signupDto );
         return this.authService.signup(signupDto);
     }
 }
