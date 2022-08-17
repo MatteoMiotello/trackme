@@ -14,11 +14,11 @@ async function bootstrap() {
         }
     });
     app.use(cookieParser());
-    app.useGlobalPipes(
-        new ValidationPipe({
-            transform: true
-        })
-    );
+    // app.useGlobalPipes(
+    //     new ValidationPipe({
+    //         transform: true
+    //     })
+    // );
 
     const config = new DocumentBuilder()
         .setTitle("Track.me API")
