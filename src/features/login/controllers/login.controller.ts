@@ -40,6 +40,14 @@ export class LoginController {
         description: 'User created success',
         type: UserDto
     })
+    @ApiBadRequestResponse({
+        description: 'If the "repeat password" is different from "password""',
+        type: '{"paramName": "repeatPassword", "description":"Passwords are different"}'
+    })
+    @ApiBadRequestResponse({
+        description: 'If the email is already present',
+        type: '{"paramName": "email", "description":"Email already present"}'
+    })
     public async signUpAction(@Body() signupDto: SignupDto) {
         return this.authService.signup(signupDto);
     }

@@ -28,10 +28,14 @@ export class User implements EntityInterface{
     @Column({ default: true })
     isActive: boolean;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({
+        select: false
+    })
     updatedDate: Date;
 
-    @CreateDateColumn()
+    @CreateDateColumn({
+        select: false
+    })
     createdDate: Date;
 
     @OneToMany(type => Resource, resource => resource.user, {onDelete: 'CASCADE'})

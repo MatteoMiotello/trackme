@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UserRepository } from "../../../models/repositories/user.repository";
 import { LoginDto } from "../../../features/login/domain/login.dto";
 import { SignupDto } from "../../../features/login/domain/signup.dto";
-import { createHash } from "crypto";
+import * as bcript from "bcrypt";
 import { BadParamException } from "../../exceptions/bad-param.exception";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "../../../models/entities/user.entity";
@@ -14,17 +14,17 @@ export class AuthService {
         private readonly jwtService: JwtService) {
     }
 
-    public async validateLogin(loginDto: LoginDto): Promise<{user: User, token: string}> {
+    public async validateLogin(loginDto: LoginDto): Promise<{ user: User, token: string }> {
         const user = await this.userRepository.findOneByEmail(loginDto.username, {
-            isActive: true,
+            isActive: true
         });
 
         if (!user) {
             throw new UnauthorizedException();
         }
 
-        if (user.password !== this.hash(loginDto.password)) {
-            throw new BadParamException("password", "wrong password");
+        if (!(await bcript.compare(loginDto.password, user.password))) {
+            throw new UnauthorizedException();
         }
 
         const token = this.jwtService.sign(
@@ -52,7 +52,7 @@ export class AuthService {
             throw new BadParamException("email", "Email already present");
         }
 
-        const hashed = this.hash(signupDto.password);
+        const hashed = await this.hash(signupDto.password);
 
         return this.userRepository.create({
             email: signupDto.email,
@@ -63,7 +63,7 @@ export class AuthService {
     }
 
     protected hash(string: string) {
-        return createHash("sha512").update(string).digest("hex");
+        return bcript.hash(string, 10);
     }
 
     protected setCookie() {
