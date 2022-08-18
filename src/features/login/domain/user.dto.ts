@@ -9,9 +9,6 @@ export class UserDto {
     email: string;
 
     @ApiProperty()
-    password: string;
-
-    @ApiProperty()
     firstName: string;
 
     @ApiProperty()

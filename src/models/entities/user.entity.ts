@@ -7,12 +7,13 @@ export class User implements EntityInterface{
     id: number;
 
     @Column({
-        nullable: false
+        nullable: false,
+        unique: true
     })
     email: string;
 
     @Column({
-        nullable: false,
+        nullable: false
     })
     password: string;
 

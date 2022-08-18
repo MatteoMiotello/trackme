@@ -2,10 +2,11 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UserRepository } from "../../../models/repositories/user.repository";
 import { LoginDto } from "../../../features/login/domain/login.dto";
 import { SignupDto } from "../../../features/login/domain/signup.dto";
-import * as bcript from "bcrypt";
 import { BadParamException } from "../../exceptions/bad-param.exception";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "../../../models/entities/user.entity";
+import * as bcrypt from "bcrypt";
+import { UserDto } from "../../../features/login/domain/user.dto";
 
 @Injectable()
 export class AuthService {
@@ -14,8 +15,8 @@ export class AuthService {
         private readonly jwtService: JwtService) {
     }
 
-    public async validateLogin(loginDto: LoginDto): Promise<{ user: User, token: string }> {
-        const user = await this.userRepository.findOneByEmail(loginDto.username, {
+    public async validateLogin(loginDto: LoginDto): Promise<{ user: UserDto, token: string }> {
+        let user = await this.userRepository.findOneByEmail(loginDto.username, {
             isActive: true
         });
 
@@ -23,7 +24,7 @@ export class AuthService {
             throw new UnauthorizedException();
         }
 
-        if (!(await bcript.compare(loginDto.password, user.password))) {
+        if (!bcrypt.compareSync( loginDto.password, user.password )) {
             throw new UnauthorizedException();
         }
 
@@ -32,11 +33,13 @@ export class AuthService {
                 username: user.email,
                 id: user.id
             }, {
-                expiresIn: "1h"
+                expiresIn: "5h"
             });
 
+        delete user.password;
+
         return {
-            user: { ...user, password: null },
+            user: { ...user },
             token: token
         };
     }
@@ -52,21 +55,21 @@ export class AuthService {
             throw new BadParamException("email", "Email already present");
         }
 
-        const hashed = await this.hash(signupDto.password);
+        const hashed = this.hash(signupDto.password);
 
-        return this.userRepository.create({
+        let userCreated = await this.userRepository.create({
             email: signupDto.email,
             password: hashed,
             firstName: signupDto.firstName,
             lastName: signupDto.lastName
         });
+
+        delete userCreated.password;
+
+        return userCreated;
     }
 
     protected hash(string: string) {
-        return bcript.hash(string, 10);
-    }
-
-    protected setCookie() {
-
+        return bcrypt.hashSync( string, 10 );
     }
 }
